@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import PrescriptionList from "@/components/organisms/PrescriptionList";
+import PrescriptionModal from "@/components/organisms/PrescriptionModal";
+import { AnimatePresence, motion } from "framer-motion";
 import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
 import Select from "@/components/atoms/Select";
-import { motion, AnimatePresence } from "framer-motion";
+import Input from "@/components/atoms/Input";
+import Button from "@/components/atoms/Button";
 
-const PatientModal = ({ isOpen, onClose, patient, onSave, departments, doctors }) => {
+function PatientModal({ isOpen, onClose, patient, onSave, departments, doctors, prescriptions, onAddPrescription, onEditPrescription, onDeletePrescription }) {
+  const [activeTab, setActiveTab] = useState("details");
+  const [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = useState(false);
+  const [selectedPrescription, setSelectedPrescription] = useState(null);
+  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -32,6 +38,7 @@ const PatientModal = ({ isOpen, onClose, patient, onSave, departments, doctors }
         allergies: Array.isArray(patient.allergies) ? patient.allergies.join(", ") : patient.allergies
       });
     } else {
+setActiveTab("details");
       setFormData({
         firstName: "",
         lastName: "",
@@ -63,9 +70,27 @@ const PatientModal = ({ isOpen, onClose, patient, onSave, departments, doctors }
     onSave(dataToSave);
   };
 
-  const handleChange = (e) => {
+const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddPrescriptionClick = () => {
+    setSelectedPrescription(null);
+    setIsPrescriptionModalOpen(true);
+  };
+
+  const handleEditPrescriptionClick = (prescription) => {
+    setSelectedPrescription(prescription);
+    setIsPrescriptionModalOpen(true);
+  };
+
+  const handleSavePrescription = (prescriptionData) => {
+    if (selectedPrescription) {
+      onEditPrescription(selectedPrescription.Id, prescriptionData);
+    } else {
+      onAddPrescription(prescriptionData);
+    }
   };
 
   return (
@@ -96,188 +121,246 @@ const PatientModal = ({ isOpen, onClose, patient, onSave, departments, doctors }
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
-                      label="First Name"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleChange}
-                      required
-                    />
-                    <Input
-                      label="Last Name"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      required
-                    />
-                    <Input
-                      label="Date of Birth"
-                      name="dateOfBirth"
-                      type="date"
-                      value={formData.dateOfBirth}
-                      onChange={handleChange}
-                      required
-                    />
-                    <Select
-                      label="Gender"
-                      name="gender"
-                      value={formData.gender}
-                      onChange={handleChange}
-                      required
+<div className="border-b border-gray-200">
+                <div className="flex gap-1 px-6">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("details")}
+                    className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                      activeTab === "details"
+                        ? "border-primary text-primary"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    Patient Details
+                  </button>
+                  {patient && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("prescriptions")}
+                      className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                        activeTab === "prescriptions"
+                          ? "border-primary text-primary"
+                          : "border-transparent text-gray-500 hover:text-gray-700"
+                      }`}
                     >
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                    </Select>
-                    <Input
-                      label="Phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      required
-                    />
-                    <Input
-                      label="Email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="mt-4">
-                    <Input
-                      label="Address"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+                      Prescriptions
+                    </button>
+                  )}
                 </div>
+              </div>
 
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Medical Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Select
-                      label="Blood Group"
-                      name="bloodGroup"
-                      value={formData.bloodGroup}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Select Blood Group</option>
-                      <option value="A+">A+</option>
-                      <option value="A-">A-</option>
-                      <option value="B+">B+</option>
-                      <option value="B-">B-</option>
-                      <option value="AB+">AB+</option>
-                      <option value="AB-">AB-</option>
-                      <option value="O+">O+</option>
-                      <option value="O-">O-</option>
-                    </Select>
-                    <Input
-                      label="Allergies (comma-separated)"
-                      name="allergies"
-                      value={formData.allergies}
-                      onChange={handleChange}
-                      placeholder="e.g., Penicillin, Pollen"
-                    />
-                    <Select
-                      label="Status"
-                      name="status"
-                      value={formData.status}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="outpatient">Outpatient</option>
-                      <option value="admitted">Admitted</option>
-                      <option value="discharged">Discharged</option>
-                    </Select>
-                    <Select
-                      label="Department"
-                      name="departmentId"
-                      value={formData.departmentId}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Select Department</option>
-                      {departments.map(dept => (
-                        <option key={dept.Id} value={dept.Id}>{dept.name}</option>
-                      ))}
-                    </Select>
-                    <Select
-                      label="Assigned Doctor"
-                      name="assignedDoctorId"
-                      value={formData.assignedDoctorId}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Select Doctor</option>
-                      {doctors.map(doctor => (
-                        <option key={doctor.Id} value={doctor.Id}>
-                          Dr. {doctor.firstName} {doctor.lastName} - {doctor.specialization}
-                        </option>
-                      ))}
-                    </Select>
+              {activeTab === "details" && (
+                <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        label="First Name"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        required
+                      />
+                      <Input
+                        label="Last Name"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        required
+                      />
+                      <Input
+                        label="Date of Birth"
+                        name="dateOfBirth"
+                        type="date"
+                        value={formData.dateOfBirth}
+                        onChange={handleChange}
+                        required
+                      />
+                      <Select
+                        label="Gender"
+                        name="gender"
+                        value={formData.gender}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </Select>
+                      <Input
+                        label="Phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                      />
+                      <Input
+                        label="Email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                    <div className="mt-4">
+                      <Input
+                        label="Address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
                   </div>
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                      Medical History
-                    </label>
-                    <textarea
-                      name="medicalHistory"
-                      value={formData.medicalHistory}
-                      onChange={handleChange}
-                      rows={3}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
-                      placeholder="Enter medical history..."
-                    />
-                  </div>
-                </div>
 
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Emergency & Insurance</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
-                      label="Emergency Contact"
-                      name="emergencyContact"
-                      value={formData.emergencyContact}
-                      onChange={handleChange}
-                      placeholder="Name - Phone"
-                      required
-                    />
-                    <Input
-                      label="Insurance Provider"
-                      name="insuranceProvider"
-                      value={formData.insuranceProvider}
-                      onChange={handleChange}
-                      required
-                    />
-                    <Input
-                      label="Insurance Number"
-                      name="insuranceNumber"
-                      value={formData.insuranceNumber}
-                      onChange={handleChange}
-                      required
-                    />
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Medical Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Select
+                        label="Blood Group"
+                        name="bloodGroup"
+                        value={formData.bloodGroup}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="">Select Blood Group</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                      </Select>
+                      <Input
+                        label="Allergies (comma-separated)"
+                        name="allergies"
+                        value={formData.allergies}
+                        onChange={handleChange}
+                        placeholder="e.g., Penicillin, Pollen"
+                      />
+                      <Select
+                        label="Status"
+                        name="status"
+                        value={formData.status}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="outpatient">Outpatient</option>
+                        <option value="admitted">Admitted</option>
+                        <option value="discharged">Discharged</option>
+                      </Select>
+                      <Select
+                        label="Department"
+                        name="departmentId"
+                        value={formData.departmentId}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="">Select Department</option>
+                        {departments.map(dept => (
+                          <option key={dept.Id} value={dept.Id}>{dept.name}</option>
+                        ))}
+                      </Select>
+                      <Select
+                        label="Assigned Doctor"
+                        name="assignedDoctorId"
+                        value={formData.assignedDoctorId}
+                        onChange={handleChange}
+                        required
+                      >
+                        <option value="">Select Doctor</option>
+                        {doctors.map(doctor => (
+                          <option key={doctor.Id} value={doctor.Id}>
+                            Dr. {doctor.firstName} {doctor.lastName} - {doctor.specialization}
+                          </option>
+                        ))}
+                      </Select>
+                    </div>
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                        Medical History
+                      </label>
+                      <textarea
+                        name="medicalHistory"
+                        value={formData.medicalHistory}
+                        onChange={handleChange}
+                        rows={3}
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+                        placeholder="Enter medical history..."
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                  <Button type="button" variant="secondary" onClick={onClose}>
-                    Cancel
-                  </Button>
-                  <Button type="submit">
-                    {patient ? "Update Patient" : "Add Patient"}
-                  </Button>
-                </div>
-              </form>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Emergency & Insurance</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        label="Emergency Contact"
+                        name="emergencyContact"
+                        value={formData.emergencyContact}
+                        onChange={handleChange}
+                        placeholder="Name - Phone"
+                        required
+                      />
+                      <Input
+                        label="Insurance Provider"
+                        name="insuranceProvider"
+                        value={formData.insuranceProvider}
+                        onChange={handleChange}
+                        required
+                      />
+                      <Input
+                        label="Insurance Number"
+                        name="insuranceNumber"
+                        value={formData.insuranceNumber}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                    <Button type="button" variant="secondary" onClick={onClose}>
+                      Cancel
+                    </Button>
+                    <Button type="submit">
+                      {patient ? "Update Patient" : "Add Patient"}
+                    </Button>
+                  </div>
+                </form>
+              )}
+
+              {activeTab === "prescriptions" && patient && (
+                <div className="p-6 space-y-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Prescriptions for {patient.firstName} {patient.lastName}
+                    </h3>
+                    <Button onClick={handleAddPrescriptionClick}>
+                      <ApperIcon name="Plus" size={16} />
+                      Add Prescription
+                    </Button>
+                  </div>
+                  
+                  <PrescriptionList
+                    prescriptions={prescriptions}
+                    onEdit={handleEditPrescriptionClick}
+                    onDelete={onDeletePrescription}
+                  />
+</div>
+              )}
+              
+              <PrescriptionModal
+                isOpen={isPrescriptionModalOpen}
+                onClose={() => setIsPrescriptionModalOpen(false)}
+                prescription={selectedPrescription}
+                onSave={handleSavePrescription}
+              />
             </motion.div>
           </motion.div>
         </>

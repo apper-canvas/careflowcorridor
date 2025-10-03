@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from "react";
-import Button from "@/components/atoms/Button";
+import React, { useEffect, useState } from "react";
+import prescriptionService from "@/services/api/prescriptionService";
+import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
 import SearchBar from "@/components/molecules/SearchBar";
-import PatientTable from "@/components/organisms/PatientTable";
-import PatientModal from "@/components/organisms/PatientModal";
-import ConfirmDialog from "@/components/organisms/ConfirmDialog";
-import Card from "@/components/atoms/Card";
-import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
+import Loading from "@/components/ui/Loading";
+import ConfirmDialog from "@/components/organisms/ConfirmDialog";
+import PatientModal from "@/components/organisms/PatientModal";
+import PatientTable from "@/components/organisms/PatientTable";
+import Card from "@/components/atoms/Card";
+import Button from "@/components/atoms/Button";
 import patientService from "@/services/api/patientService";
-import departmentService from "@/services/api/departmentService";
 import doctorService from "@/services/api/doctorService";
-import { toast } from "react-toastify";
+import departmentService from "@/services/api/departmentService";
 
 const Patients = () => {
-  const [patients, setPatients] = useState([]);
+const [patients, setPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [doctors, setDoctors] = useState([]);
@@ -24,9 +25,9 @@ const Patients = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
+  const [prescriptions, setPrescriptions] = useState([]);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [patientToDelete, setPatientToDelete] = useState(null);
-
   const loadData = async () => {
     try {
       setLoading(true);
@@ -74,9 +75,62 @@ const Patients = () => {
     setIsModalOpen(true);
   };
 
-  const handleViewPatient = (patient) => {
+const handleViewPatient = async (patient) => {
     setSelectedPatient(patient);
     setIsModalOpen(true);
+    await loadPrescriptions(patient.Id);
+  };
+
+  const loadPrescriptions = async (patientId) => {
+    try {
+      const data = await prescriptionService.getByPatientId(patientId);
+      setPrescriptions(data);
+    } catch (err) {
+      console.error("Failed to load prescriptions:", err);
+      setPrescriptions([]);
+    }
+  };
+
+  const handleAddPrescription = async (prescriptionData) => {
+    try {
+      const newPrescription = await prescriptionService.create({
+        ...prescriptionData,
+        patientId: selectedPatient.Id
+      });
+      setPrescriptions(prev => [...prev, newPrescription]);
+      toast.success("Prescription added successfully");
+    } catch (err) {
+      console.error("Failed to add prescription:", err);
+      toast.error("Failed to add prescription");
+    }
+  };
+
+  const handleEditPrescription = async (id, prescriptionData) => {
+    try {
+      const updated = await prescriptionService.update(id, prescriptionData);
+      if (updated) {
+        setPrescriptions(prev =>
+          prev.map(p => (p.Id === id ? updated : p))
+        );
+        toast.success("Prescription updated successfully");
+      }
+    } catch (err) {
+      console.error("Failed to update prescription:", err);
+      toast.error("Failed to update prescription");
+    }
+  };
+
+  const handleDeletePrescription = async (id) => {
+    if (!confirm("Are you sure you want to delete this prescription?")) return;
+    
+    try {
+      await prescriptionService.delete(id);
+      setPrescriptions(prev => prev.filter(p => p.Id !== id));
+      toast.success("Prescription deleted successfully");
+    } catch (err) {
+      console.error("Failed to delete prescription:", err);
+      toast.error("Failed to delete prescription");
+    }
   };
 
   const handleSavePatient = async (patientData) => {
@@ -160,13 +214,17 @@ const Patients = () => {
         )}
       </Card>
 
-      <PatientModal
+<PatientModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         patient={selectedPatient}
         onSave={handleSavePatient}
         departments={departments}
         doctors={doctors}
+        prescriptions={prescriptions}
+        onAddPrescription={handleAddPrescription}
+        onEditPrescription={handleEditPrescription}
+        onDeletePrescription={handleDeletePrescription}
       />
 
       <ConfirmDialog
