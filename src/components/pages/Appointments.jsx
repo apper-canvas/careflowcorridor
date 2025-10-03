@@ -67,9 +67,9 @@ const Appointments = () => {
     }
   };
 
-  const filteredAppointments = filterStatus === "all"
+const filteredAppointments = filterStatus === "all"
     ? appointments
-    : appointments.filter(a => a.status === filterStatus);
+    : appointments.filter(a => a.status_c === filterStatus);
 
   if (loading) return <Loading />;
   if (error) return <Error message={error} onRetry={loadData} />;
