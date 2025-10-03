@@ -1,0 +1,122 @@
+[
+  {
+    "Id": 1,
+    "patientId": "1",
+    "doctorId": "1",
+    "date": "2024-01-25",
+    "time": "09:00",
+    "duration": 30,
+    "type": "consultation",
+    "status": "scheduled",
+    "notes": "Follow-up for diabetes management",
+    "createdAt": "2024-01-20T10:00:00Z"
+  },
+  {
+    "Id": 2,
+    "patientId": "2",
+    "doctorId": "2",
+    "date": "2024-01-25",
+    "time": "10:00",
+    "duration": 45,
+    "type": "follow-up",
+    "status": "scheduled",
+    "notes": "Asthma checkup and medication review",
+    "createdAt": "2024-01-20T11:00:00Z"
+  },
+  {
+    "Id": 3,
+    "patientId": "3",
+    "doctorId": "3",
+    "date": "2024-01-25",
+    "time": "11:00",
+    "duration": 30,
+    "type": "consultation",
+    "status": "scheduled",
+    "notes": "Neurological assessment for migraines",
+    "createdAt": "2024-01-20T12:00:00Z"
+  },
+  {
+    "Id": 4,
+    "patientId": "5",
+    "doctorId": "4",
+    "date": "2024-01-25",
+    "time": "14:00",
+    "duration": 30,
+    "type": "checkup",
+    "status": "scheduled",
+    "notes": "Routine orthopedic examination",
+    "createdAt": "2024-01-21T09:00:00Z"
+  },
+  {
+    "Id": 5,
+    "patientId": "6",
+    "doctorId": "5",
+    "date": "2024-01-25",
+    "time": "15:00",
+    "duration": 60,
+    "type": "consultation",
+    "status": "scheduled",
+    "notes": "Kidney function evaluation",
+    "createdAt": "2024-01-21T10:00:00Z"
+  },
+  {
+    "Id": 6,
+    "patientId": "7",
+    "doctorId": "6",
+    "date": "2024-01-26",
+    "time": "09:30",
+    "duration": 30,
+    "type": "checkup",
+    "status": "scheduled",
+    "notes": "Pediatric wellness visit",
+    "createdAt": "2024-01-22T14:00:00Z"
+  },
+  {
+    "Id": 7,
+    "patientId": "8",
+    "doctorId": "7",
+    "date": "2024-01-26",
+    "time": "10:30",
+    "duration": 45,
+    "type": "follow-up",
+    "status": "scheduled",
+    "notes": "COPD management and oxygen therapy review",
+    "createdAt": "2024-01-22T15:00:00Z"
+  },
+  {
+    "Id": 8,
+    "patientId": "4",
+    "doctorId": "1",
+    "date": "2024-01-24",
+    "time": "11:00",
+    "duration": 30,
+    "type": "follow-up",
+    "status": "completed",
+    "notes": "Post-discharge follow-up",
+    "createdAt": "2024-01-15T08:00:00Z"
+  },
+  {
+    "Id": 9,
+    "patientId": "1",
+    "doctorId": "1",
+    "date": "2024-01-23",
+    "time": "14:00",
+    "duration": 30,
+    "type": "consultation",
+    "status": "completed",
+    "notes": "Blood pressure monitoring",
+    "createdAt": "2024-01-18T09:00:00Z"
+  },
+  {
+    "Id": 10,
+    "patientId": "2",
+    "doctorId": "2",
+    "date": "2024-01-22",
+    "time": "09:00",
+    "duration": 30,
+    "type": "checkup",
+    "status": "no-show",
+    "notes": "Patient did not attend scheduled appointment",
+    "createdAt": "2024-01-17T10:00:00Z"
+  }
+]
