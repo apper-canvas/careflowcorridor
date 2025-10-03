@@ -31,35 +31,35 @@ const PatientTable = ({ patients, onView, onEdit, onDelete }) => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {patients.map((patient) => (
+{patients.map((patient) => (
             <tr key={patient.Id} className="hover:bg-gray-50 transition-colors duration-150">
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold">
-                    {patient.firstName[0]}{patient.lastName[0]}
+                    {patient.first_name_c?.[0]}{patient.last_name_c?.[0]}
                   </div>
                   <div className="ml-4">
                     <div className="font-medium text-gray-900">
-                      {patient.firstName} {patient.lastName}
+                      {patient.first_name_c} {patient.last_name_c}
                     </div>
                     <div className="text-sm text-gray-600">ID: {patient.Id}</div>
                   </div>
                 </div>
               </td>
               <td className="px-6 py-4">
-                <div className="text-sm text-gray-900">{patient.phone}</div>
-                <div className="text-sm text-gray-600">{patient.email}</div>
+                <div className="text-sm text-gray-900">{patient.phone_c}</div>
+                <div className="text-sm text-gray-600">{patient.email_c}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-error/10 text-error">
-                  {patient.bloodGroup}
+                  {patient.blood_group_c}
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <StatusBadge status={patient.status} />
+                <StatusBadge status={patient.status_c} />
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                {format(new Date(patient.admissionDate), "MMM dd, yyyy")}
+                {patient.admission_date_c ? format(new Date(patient.admission_date_c), "MMM dd, yyyy") : "N/A"}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                 <div className="flex items-center justify-end gap-2">

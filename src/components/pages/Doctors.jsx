@@ -36,14 +36,14 @@ const Doctors = () => {
     let filtered = doctors;
 
     if (searchQuery) {
-      filtered = filtered.filter(d =>
-        `${d.firstName} ${d.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        d.specialization.toLowerCase().includes(searchQuery.toLowerCase())
+filtered = filtered.filter(d =>
+        `${d.first_name_c} ${d.last_name_c}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        d.specialization_c?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     if (filterStatus !== "all") {
-      filtered = filtered.filter(d => d.availability === filterStatus);
+      filtered = filtered.filter(d => d.availability_c === filterStatus);
     }
 
     setFilteredDoctors(filtered);

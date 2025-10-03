@@ -6,30 +6,39 @@ import Select from "@/components/atoms/Select";
 import { motion, AnimatePresence } from "framer-motion";
 
 const AppointmentModal = ({ isOpen, onClose, appointment, onSave, patients, doctors }) => {
-  const [formData, setFormData] = useState({
-    patientId: "",
-    doctorId: "",
-    date: "",
-    time: "",
-    duration: 30,
-    type: "consultation",
-    status: "scheduled",
-    notes: ""
+const [formData, setFormData] = useState({
+    patient_id_c: "",
+    doctor_id_c: "",
+    date_c: "",
+    time_c: "",
+    duration_c: 30,
+    type_c: "consultation",
+    status_c: "scheduled",
+    notes_c: ""
   });
 
   useEffect(() => {
-    if (appointment) {
-      setFormData(appointment);
+if (appointment) {
+      setFormData({
+        patient_id_c: appointment.patient_id_c?.Id || appointment.patient_id_c || "",
+        doctor_id_c: appointment.doctor_id_c?.Id || appointment.doctor_id_c || "",
+        date_c: appointment.date_c || "",
+        time_c: appointment.time_c || "",
+        duration_c: appointment.duration_c || 30,
+        type_c: appointment.type_c || "consultation",
+        status_c: appointment.status_c || "scheduled",
+        notes_c: appointment.notes_c || ""
+      });
     } else {
       setFormData({
-        patientId: "",
-        doctorId: "",
-        date: "",
-        time: "",
-        duration: 30,
-        type: "consultation",
-        status: "scheduled",
-        notes: ""
+        patient_id_c: "",
+        doctor_id_c: "",
+        date_c: "",
+        time_c: "",
+        duration_c: 30,
+        type_c: "consultation",
+        status_c: "scheduled",
+        notes_c: ""
       });
     }
   }, [appointment, isOpen]);
@@ -74,54 +83,54 @@ const AppointmentModal = ({ isOpen, onClose, appointment, onSave, patients, doct
 
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Select
+<Select
                     label="Patient"
-                    name="patientId"
-                    value={formData.patientId}
+                    name="patient_id_c"
+                    value={formData.patient_id_c}
                     onChange={handleChange}
                     required
                   >
                     <option value="">Select Patient</option>
                     {patients.map(patient => (
                       <option key={patient.Id} value={patient.Id}>
-                        {patient.firstName} {patient.lastName}
+                        {patient.first_name_c} {patient.last_name_c}
                       </option>
                     ))}
                   </Select>
-                  <Select
+<Select
                     label="Doctor"
-                    name="doctorId"
-                    value={formData.doctorId}
+                    name="doctor_id_c"
+                    value={formData.doctor_id_c}
                     onChange={handleChange}
                     required
                   >
                     <option value="">Select Doctor</option>
                     {doctors.map(doctor => (
                       <option key={doctor.Id} value={doctor.Id}>
-                        Dr. {doctor.firstName} {doctor.lastName} - {doctor.specialization}
+                        Dr. {doctor.first_name_c} {doctor.last_name_c} - {doctor.specialization_c}
                       </option>
-                    ))}
+))}
                   </Select>
                   <Input
                     label="Date"
-                    name="date"
+                    name="date_c"
                     type="date"
-                    value={formData.date}
-                    onChange={handleChange}
+                    value={formData.date_c}
+onChange={handleChange}
                     required
                   />
                   <Input
                     label="Time"
-                    name="time"
+                    name="time_c"
                     type="time"
-                    value={formData.time}
+value={formData.time_c}
                     onChange={handleChange}
                     required
                   />
                   <Select
                     label="Duration (minutes)"
-                    name="duration"
-                    value={formData.duration}
+                    name="duration_c"
+                    value={formData.duration_c}
                     onChange={handleChange}
                     required
                   >
@@ -130,10 +139,10 @@ const AppointmentModal = ({ isOpen, onClose, appointment, onSave, patients, doct
                     <option value={45}>45 minutes</option>
                     <option value={60}>60 minutes</option>
                   </Select>
-                  <Select
+<Select
                     label="Type"
-                    name="type"
-                    value={formData.type}
+                    name="type_c"
+                    value={formData.type_c}
                     onChange={handleChange}
                     required
                   >
@@ -148,8 +157,8 @@ const AppointmentModal = ({ isOpen, onClose, appointment, onSave, patients, doct
                     Notes
                   </label>
                   <textarea
-                    name="notes"
-                    value={formData.notes}
+name="notes_c"
+                    value={formData.notes_c}
                     onChange={handleChange}
                     rows={3}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"

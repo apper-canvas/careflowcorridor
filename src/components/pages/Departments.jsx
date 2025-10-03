@@ -35,9 +35,11 @@ const Departments = () => {
     loadData();
   }, []);
 
-  const getHeadDoctor = (headDoctorId) => {
-    const doctor = doctors.find(d => d.Id === parseInt(headDoctorId));
-    return doctor ? `Dr. ${doctor.firstName} ${doctor.lastName}` : "Not assigned";
+const getHeadDoctor = (headDoctorId) => {
+    if (!headDoctorId) return "Not assigned";
+    const doctorId = typeof headDoctorId === 'object' ? headDoctorId.Id : parseInt(headDoctorId);
+    const doctor = doctors.find(d => d.Id === doctorId);
+    return doctor ? `Dr. ${doctor.first_name_c} ${doctor.last_name_c}` : "Not assigned";
   };
 
   if (loading) return <Loading />;
@@ -62,7 +64,7 @@ const Departments = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {departments.map((dept, index) => {
-          const occupancyRate = Math.round((dept.occupiedBeds / dept.totalBeds) * 100);
+const occupancyRate = Math.round(((dept.occupied_beds_c || 0) / (dept.total_beds_c || 1)) * 100);
           const isHighOccupancy = occupancyRate > 80;
 
           return (
@@ -79,7 +81,7 @@ const Departments = () => {
                       <ApperIcon name="Building2" size={24} className="text-primary" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900">{dept.name}</h3>
+                      <h3 className="font-bold text-gray-900">{dept.name_c || dept.Name}</h3>
                       <p className="text-sm text-gray-600">Department</p>
                     </div>
                   </div>
@@ -97,7 +99,7 @@ const Departments = () => {
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-gray-600">Bed Occupancy</span>
                       <span className="text-sm font-semibold text-gray-900">
-                        {dept.occupiedBeds} / {dept.totalBeds}
+                        {dept.occupied_beds_c || 0} / {dept.total_beds_c || 0}
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
@@ -117,19 +119,19 @@ const Departments = () => {
                   <div className="pt-4 border-t border-gray-100">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                       <ApperIcon name="UserCheck" size={16} />
-                      <span>Head: {getHeadDoctor(dept.headDoctorId)}</span>
+                      <span>Head: {getHeadDoctor(dept.head_doctor_id_c)}</span>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 pt-2">
                     <div className="text-center p-3 bg-success/5 rounded-lg">
                       <p className="text-2xl font-bold text-success">
-                        {dept.totalBeds - dept.occupiedBeds}
+                        {(dept.total_beds_c || 0) - (dept.occupied_beds_c || 0)}
                       </p>
                       <p className="text-xs text-gray-600 mt-1">Available</p>
                     </div>
                     <div className="text-center p-3 bg-primary/5 rounded-lg">
-                      <p className="text-2xl font-bold text-primary">{dept.occupiedBeds}</p>
+                      <p className="text-2xl font-bold text-primary">{dept.occupied_beds_c || 0}</p>
                       <p className="text-xs text-gray-600 mt-1">Occupied</p>
                     </div>
                   </div>

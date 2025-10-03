@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
+import { AuthContext } from "@/App";
 
 const Header = ({ onMenuClick, onQuickAction }) => {
+  const { logout } = useContext(AuthContext);
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
       <div className="px-4 sm:px-6 lg:px-8 py-4">
@@ -21,7 +23,7 @@ const Header = ({ onMenuClick, onQuickAction }) => {
               <h1 className="text-lg font-bold text-gray-900">CareFlow</h1>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+<div className="flex items-center gap-3">
             <Button
               onClick={onQuickAction}
               size="sm"
@@ -32,6 +34,13 @@ const Header = ({ onMenuClick, onQuickAction }) => {
             </Button>
             <button className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200">
               <ApperIcon name="Bell" size={20} />
+            </button>
+            <button 
+              onClick={logout}
+              className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+              title="Logout"
+            >
+              <ApperIcon name="LogOut" size={20} />
             </button>
           </div>
         </div>

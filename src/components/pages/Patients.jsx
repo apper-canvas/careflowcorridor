@@ -53,11 +53,11 @@ const [patients, setPatients] = useState([]);
   }, []);
 
   useEffect(() => {
-    if (searchQuery) {
+if (searchQuery) {
       const filtered = patients.filter(p =>
-        `${p.firstName} ${p.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.phone.includes(searchQuery)
+        `${p.first_name_c} ${p.last_name_c}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.email_c?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.phone_c?.includes(searchQuery)
       );
       setFilteredPatients(filtered);
     } else {
@@ -93,9 +93,9 @@ const handleViewPatient = async (patient) => {
 
   const handleAddPrescription = async (prescriptionData) => {
     try {
-      const newPrescription = await prescriptionService.create({
+const newPrescription = await prescriptionService.create({
         ...prescriptionData,
-        patientId: selectedPatient.Id
+        patient_id_c: selectedPatient.Id
       });
       setPrescriptions(prev => [...prev, newPrescription]);
       toast.success("Prescription added successfully");

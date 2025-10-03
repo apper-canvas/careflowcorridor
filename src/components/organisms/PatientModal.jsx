@@ -12,60 +12,73 @@ function PatientModal({ isOpen, onClose, patient, onSave, departments, doctors, 
   const [isPrescriptionModalOpen, setIsPrescriptionModalOpen] = useState(false);
   const [selectedPrescription, setSelectedPrescription] = useState(null);
   
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-    gender: "",
-    phone: "",
-    email: "",
-    address: "",
-    bloodGroup: "",
-    allergies: "",
-    emergencyContact: "",
-    insuranceProvider: "",
-    insuranceNumber: "",
-    status: "outpatient",
-    departmentId: "",
-    assignedDoctorId: "",
-    medicalHistory: ""
+const [formData, setFormData] = useState({
+    first_name_c: "",
+    last_name_c: "",
+    date_of_birth_c: "",
+    gender_c: "",
+    phone_c: "",
+    email_c: "",
+    address_c: "",
+    blood_group_c: "",
+    allergies_c: "",
+    emergency_contact_c: "",
+    insurance_provider_c: "",
+    insurance_number_c: "",
+    status_c: "outpatient",
+    department_id_c: "",
+    assigned_doctor_id_c: "",
+    medical_history_c: ""
   });
 
-  useEffect(() => {
+useEffect(() => {
     if (patient) {
       setFormData({
-        ...patient,
-        allergies: Array.isArray(patient.allergies) ? patient.allergies.join(", ") : patient.allergies
+        first_name_c: patient.first_name_c || "",
+        last_name_c: patient.last_name_c || "",
+        date_of_birth_c: patient.date_of_birth_c || "",
+        gender_c: patient.gender_c || "",
+        phone_c: patient.phone_c || "",
+        email_c: patient.email_c || "",
+        address_c: patient.address_c || "",
+        blood_group_c: patient.blood_group_c || "",
+        allergies_c: patient.allergies_c || "",
+        emergency_contact_c: patient.emergency_contact_c || "",
+        insurance_provider_c: patient.insurance_provider_c || "",
+        insurance_number_c: patient.insurance_number_c || "",
+        status_c: patient.status_c || "outpatient",
+        department_id_c: patient.department_id_c?.Id || patient.department_id_c || "",
+        assigned_doctor_id_c: patient.assigned_doctor_id_c?.Id || patient.assigned_doctor_id_c || "",
+        medical_history_c: patient.medical_history_c || ""
       });
     } else {
-setActiveTab("details");
+      setActiveTab("details");
       setFormData({
-        firstName: "",
-        lastName: "",
-        dateOfBirth: "",
-        gender: "",
-        phone: "",
-        email: "",
-        address: "",
-        bloodGroup: "",
-        allergies: "",
-        emergencyContact: "",
-        insuranceProvider: "",
-        insuranceNumber: "",
-        status: "outpatient",
-        departmentId: "",
-        assignedDoctorId: "",
-        medicalHistory: ""
+        first_name_c: "",
+        last_name_c: "",
+        date_of_birth_c: "",
+        gender_c: "",
+        phone_c: "",
+        email_c: "",
+        address_c: "",
+        blood_group_c: "",
+        allergies_c: "",
+        emergency_contact_c: "",
+        insurance_provider_c: "",
+        insurance_number_c: "",
+        status_c: "outpatient",
+        department_id_c: "",
+        assigned_doctor_id_c: "",
+        medical_history_c: ""
       });
     }
   }, [patient, isOpen]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dataToSave = {
+const dataToSave = {
       ...formData,
-      allergies: formData.allergies.split(",").map(a => a.trim()).filter(a => a),
-      admissionDate: patient ? patient.admissionDate : new Date().toISOString().split("T")[0]
+      admission_date_c: patient ? patient.admission_date_c : new Date().toISOString().split("T")[0]
     };
     onSave(dataToSave);
   };
@@ -155,32 +168,32 @@ const handleChange = (e) => {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Input
+<Input
                         label="First Name"
-                        name="firstName"
-                        value={formData.firstName}
+                        name="first_name_c"
+                        value={formData.first_name_c}
                         onChange={handleChange}
                         required
                       />
                       <Input
                         label="Last Name"
-                        name="lastName"
-                        value={formData.lastName}
+                        name="last_name_c"
+                        value={formData.last_name_c}
                         onChange={handleChange}
                         required
                       />
                       <Input
-                        label="Date of Birth"
-                        name="dateOfBirth"
+label="Date of Birth"
+                        name="date_of_birth_c"
                         type="date"
-                        value={formData.dateOfBirth}
+                        value={formData.date_of_birth_c}
                         onChange={handleChange}
                         required
                       />
-                      <Select
+<Select
                         label="Gender"
-                        name="gender"
-                        value={formData.gender}
+                        name="gender_c"
+                        value={formData.gender_c}
                         onChange={handleChange}
                         required
                       >
@@ -189,27 +202,27 @@ const handleChange = (e) => {
                         <option value="Female">Female</option>
                         <option value="Other">Other</option>
                       </Select>
-                      <Input
+<Input
                         label="Phone"
-                        name="phone"
-                        value={formData.phone}
+                        name="phone_c"
+                        value={formData.phone_c}
                         onChange={handleChange}
                         required
                       />
-                      <Input
+<Input
                         label="Email"
-                        name="email"
+                        name="email_c"
                         type="email"
-                        value={formData.email}
+                        value={formData.email_c}
                         onChange={handleChange}
                         required
                       />
                     </div>
                     <div className="mt-4">
-                      <Input
+<Input
                         label="Address"
-                        name="address"
-                        value={formData.address}
+                        name="address_c"
+                        value={formData.address_c}
                         onChange={handleChange}
                         required
                       />
@@ -219,10 +232,10 @@ const handleChange = (e) => {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Medical Information</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Select
+<Select
                         label="Blood Group"
-                        name="bloodGroup"
-                        value={formData.bloodGroup}
+                        name="blood_group_c"
+                        value={formData.blood_group_c}
                         onChange={handleChange}
                         required
                       >
@@ -236,17 +249,17 @@ const handleChange = (e) => {
                         <option value="O+">O+</option>
                         <option value="O-">O-</option>
                       </Select>
-                      <Input
-                        label="Allergies (comma-separated)"
-                        name="allergies"
-                        value={formData.allergies}
+<Input
+                        label="Allergies"
+                        name="allergies_c"
+                        value={formData.allergies_c}
                         onChange={handleChange}
                         placeholder="e.g., Penicillin, Pollen"
                       />
-                      <Select
+<Select
                         label="Status"
-                        name="status"
-                        value={formData.status}
+                        name="status_c"
+                        value={formData.status_c}
                         onChange={handleChange}
                         required
                       >
@@ -254,29 +267,29 @@ const handleChange = (e) => {
                         <option value="admitted">Admitted</option>
                         <option value="discharged">Discharged</option>
                       </Select>
-                      <Select
+<Select
                         label="Department"
-                        name="departmentId"
-                        value={formData.departmentId}
+                        name="department_id_c"
+                        value={formData.department_id_c}
                         onChange={handleChange}
                         required
                       >
                         <option value="">Select Department</option>
                         {departments.map(dept => (
-                          <option key={dept.Id} value={dept.Id}>{dept.name}</option>
+                          <option key={dept.Id} value={dept.Id}>{dept.name_c || dept.Name}</option>
                         ))}
-                      </Select>
+</Select>
                       <Select
                         label="Assigned Doctor"
-                        name="assignedDoctorId"
-                        value={formData.assignedDoctorId}
+                        name="assigned_doctor_id_c"
+                        value={formData.assigned_doctor_id_c}
                         onChange={handleChange}
                         required
                       >
                         <option value="">Select Doctor</option>
                         {doctors.map(doctor => (
                           <option key={doctor.Id} value={doctor.Id}>
-                            Dr. {doctor.firstName} {doctor.lastName} - {doctor.specialization}
+                            Dr. {doctor.first_name_c} {doctor.last_name_c} - {doctor.specialization_c}
                           </option>
                         ))}
                       </Select>
@@ -285,9 +298,9 @@ const handleChange = (e) => {
                       <label className="block text-sm font-medium text-gray-700 mb-1.5">
                         Medical History
                       </label>
-                      <textarea
-                        name="medicalHistory"
-                        value={formData.medicalHistory}
+<textarea
+                        name="medical_history_c"
+                        value={formData.medical_history_c}
                         onChange={handleChange}
                         rows={3}
                         className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
@@ -299,25 +312,25 @@ const handleChange = (e) => {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Emergency & Insurance</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Input
+<Input
                         label="Emergency Contact"
-                        name="emergencyContact"
-                        value={formData.emergencyContact}
+                        name="emergency_contact_c"
+                        value={formData.emergency_contact_c}
                         onChange={handleChange}
                         placeholder="Name - Phone"
                         required
-                      />
+/>
                       <Input
                         label="Insurance Provider"
-                        name="insuranceProvider"
-                        value={formData.insuranceProvider}
+                        name="insurance_provider_c"
+                        value={formData.insurance_provider_c}
                         onChange={handleChange}
                         required
-                      />
+/>
                       <Input
                         label="Insurance Number"
-                        name="insuranceNumber"
-                        value={formData.insuranceNumber}
+                        name="insurance_number_c"
+                        value={formData.insurance_number_c}
                         onChange={handleChange}
                         required
                       />
@@ -339,7 +352,7 @@ const handleChange = (e) => {
                 <div className="p-6 space-y-4">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold text-gray-900">
-                      Prescriptions for {patient.firstName} {patient.lastName}
+Prescriptions for {patient.first_name_c} {patient.last_name_c}
                     </h3>
                     <Button onClick={handleAddPrescriptionClick}>
                       <ApperIcon name="Plus" size={16} />
