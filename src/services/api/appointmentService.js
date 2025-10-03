@@ -254,4 +254,3 @@ const appointmentService = {
 };
 
 export default appointmentService;
-export default appointmentService;
